@@ -1,0 +1,83 @@
+﻿@model ExperienceTracker.Models.Campaign
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Campaign</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+    </dl>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Players)
+        </dt>
+        <dd>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Name)
+                        </th>
+                        <th>
+                            @Html.DisplayName("Character")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Experience")
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Players)
+                    {
+                        var character = item.Player.Characters.SingleOrDefault(c => c.CampaignId == item.CampaignId);
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Player.Name)
+                            </td>
+                            <td>
+                                @if (character != null)
+                                {
+                                    @Html.DisplayFor(modelItem => character.Name);
+                                }
+                                else
+                                {
+                                    @Html.DisplayName("Not Available")
+                                }
+                            </td>
+                            <td>
+                                @if (character != null)
+                                {
+                                    @Html.DisplayFor(modelItem => character.Experience);
+                                }
+                                else
+                                {
+                                    @Html.DisplayName("Not Available")
+                                }
+                            </td>
+                            <td>
+                                <a asp-controller="Players" asp-action="Edit" asp-route-id="@item.Player.Id">Edit</a> |
+                                <a asp-controller="Players" asp-action="Details" asp-route-id="@item.Player.Id">Details</a> |
+                                <a asp-controller="CampaignPlayers" asp-action="Delete" asp-all-route-data="@{new Dictionary<string, string> { {"campaignId", item.CampaignId.ToString() }, { "playerId", item.Player.Id.ToString() } }}">Remove</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
