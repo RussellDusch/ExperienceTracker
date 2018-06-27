@@ -29,7 +29,7 @@
                             @Html.DisplayNameFor(model => model.Name)
                         </th>
                         <th>
-                            @Html.DisplayName("Character")
+                            @Html.DisplayName("Characters")
                         </th>
                         <th>
                             @Html.DisplayName("Experience")
@@ -40,31 +40,51 @@
                 <tbody>
                     @foreach (var item in Model.Players)
                     {
-                        var character = item.Player.Characters.SingleOrDefault(c => c.CampaignId == item.CampaignId);
+                        var characters = item.Player.Characters.Where(c => c.CampaignId == item.CampaignId);
                         <tr>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Player.Name)
                             </td>
-                            <td>
-                                @if (character != null)
-                                {
-                                    @Html.DisplayFor(modelItem => character.Name);
-                                }
-                                else
-                                {
+                            @if (characters.Count() > 0)
+                            {
+                                <td>
+                                    <table>
+                                        <tbody>
+                                            @foreach (var character in characters)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => character.Name)
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td>
+                                    <table>
+                                        <tbody>
+                                            @foreach (var character in characters)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => character.Experience)
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
                                     @Html.DisplayName("Not Available")
-                                }
-                            </td>
-                            <td>
-                                @if (character != null)
-                                {
-                                    @Html.DisplayFor(modelItem => character.Experience);
-                                }
-                                else
-                                {
+                                </td>
+                                <td>
                                     @Html.DisplayName("Not Available")
-                                }
-                            </td>
+                                </td>
+                            }
                             <td>
                                 <a asp-controller="Players" asp-action="Edit" asp-route-id="@item.Player.Id">Edit</a> |
                                 <a asp-controller="Players" asp-action="Details" asp-route-id="@item.Player.Id">Details</a> |

@@ -17,6 +17,85 @@
             @Html.DisplayFor(model => model.Name)
         </dd>
     </dl>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Campaigns)
+        </dt>
+        <dd>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Name)
+                        </th>
+                        <th>
+                            @Html.DisplayName("Character")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Experience")
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Campaigns)
+                    {
+                        var characters = item.Campaign.Characters.Where(c => c.PlayerId == Model.Id);
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Campaign.Name)
+                            </td>
+                            @if (characters.Count() > 0)
+                            {
+                                <td>
+                                    <table>
+                                        <tbody>
+                                            @foreach (var character in characters)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => character.Name)
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td>
+                                    <table>
+                                        <tbody>
+                                            @foreach (var character in characters)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => character.Experience)
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    @Html.DisplayName("Not Available")
+                                </td>
+                                <td>
+                                    @Html.DisplayName("Not Available")
+                                </td>
+                            }
+                            <td>
+                                <a asp-controller="Players" asp-action="Edit" asp-route-id="@item.CampaignId">Edit</a> |
+                                <a asp-controller="Players" asp-action="Details" asp-route-id="@item.CampaignId">Details</a> |
+                                <a asp-controller="CampaignPlayers" asp-action="Delete" asp-all-route-data="@{new Dictionary<string, string> { {"campaignId", item.CampaignId.ToString() }, { "playerId", item.Player.Id.ToString() } }}">Remove</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </dd>
+    </dl>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |

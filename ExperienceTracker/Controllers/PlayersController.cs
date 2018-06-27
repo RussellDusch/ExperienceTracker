@@ -33,6 +33,9 @@ namespace ExperienceTracker.Controllers
             }
 
             var player = await _context.Players
+                .Include(p => p.Campaigns)
+                .ThenInclude(pc => pc.Campaign)
+                .ThenInclude(c => c.Characters)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (player == null)
             {
